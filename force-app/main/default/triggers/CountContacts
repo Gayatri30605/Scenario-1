@@ -1,0 +1,32 @@
+// Create a field on Account named "Number of Contacts". Populate this field with the number of contacts related to an account.
+
+trigger CountContacts on Contact (after insert, after delete) {
+
+    list<account> addaccount = new list<account>();
+    list <id> addcon = new list<id>();
+    if(trigger.isInsert)
+    {
+        for(contact con : trigger.new)
+        {
+            addcon.add(con.accountid);
+        }
+    }
+    
+    if(trigger.isDelete)
+    {
+        for(contact con : trigger.old)
+        {
+            addcon.add(con.accountid);
+        }
+    }
+    
+    list<account> acc = [Select id, Number_Of_Contacts__c,(Select id from contacts)from account where id in:addcon];
+    
+    for(account a: acc)
+    {
+        a.Number_Of_Contacts__c = a.contacts.size();
+        addaccount.add(a);
+    }
+    
+    update addaccount;
+}

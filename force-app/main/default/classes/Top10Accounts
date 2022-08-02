@@ -1,0 +1,12 @@
+public class Top10Accounts {
+    
+    @AuraEnabled
+      public static List<Account> getAccounts()
+      {
+          
+         List<Account> acc = new  List<Account>();
+         acc = [SELECT Id, name, Phone, CreatedById FROM Account ORDER BY createdDate DESC Limit 10];
+         return acc; 
+      }
+
+}
